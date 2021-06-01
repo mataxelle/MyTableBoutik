@@ -11,7 +11,7 @@
         <h3>{{ furniture.name }}</h3>
         <img v-bind:src="furniture.imageUrl" alt="image d'un meuble">
         <p>Prix : {{ furniture.price / 100 }}€</p>
-        <a href="">Voir le produit</a>
+        <router-link :to="{ name: 'Furniture', params: { furnitureId: furniture._id }}">Voir le produit</router-link>
       </div>
     </div>
   </div>
