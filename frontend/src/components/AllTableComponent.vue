@@ -2,7 +2,7 @@
   <div>
     <h1>My Table Boutik</h1>
 
-    <p>Depuis 1986, nous vendons des meubles vintage.</p>
+    <p>Depuis 1986, nous vendons des meubles en chêne vintage.</p>
 
     <h2>Faites de belles affaires ! </h2>
 
