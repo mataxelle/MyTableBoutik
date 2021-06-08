@@ -56,15 +56,24 @@ export default {
             };
             console.log(this.selected);
 
+            const itemToCartOk = () => {
+                if (this.selected) {
+                    cartLocalStorage.push(choisedItem);
+                    localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
+                } else {
+                    alert('Choisissez un vernis s\' vous plaît !');
+                }
+            };
+
             if (cartLocalStorage) {
                 
-                cartLocalStorage.push(choisedItem);
-                localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
+                itemToCartOk();
+
             } else {
-                
+
                 cartLocalStorage = [];
-                localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
-            }//ajouter un msg pour obliger a choisir un vernis
+                itemToCartOk();
+            }
         }
     }
     
