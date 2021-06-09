@@ -11,6 +11,7 @@
             <th>Prix unitaire</th>
             <th>Qt</th>
             <th>Total</th>
+            <th>x</th>
           </tr>
         </thead>
         <tbody id="cartBody"></tbody>
@@ -21,14 +22,21 @@
         </tfoot>
       </table>
     </div>
+
+    <UserInformationComponent/>
   </div>
 </template>
 
 <script>
+import UserInformationComponent from '@/components/UserInformationComponent.vue'
+
 let cartLocalStorage = JSON.parse(localStorage.getItem("cartItem"));
 
 export default {
   name: "CartComponent",
+  components: {
+      UserInformationComponent
+  },
 
   mounted() {
     if (!cartLocalStorage) {
@@ -48,7 +56,7 @@ export default {
         let totalRow = (cartItem.quantity * cartItem.price) / 100;
 
         const table = document.getElementById("cartBody");
-        const row = table.insertRow(); //tr
+        const row = table.insertRow(); //tr. (0) ajoute l'item en première ligne
         const cell1 = row.insertCell(0); //td
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
@@ -85,3 +93,27 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+table {
+    margin: auto;
+    width: 85%;
+    border-collapse: collapse;
+}
+
+/*tr:nth-child(odd) {     NE S'PPLIQUE PAS DU TOUT AU TBODY TR
+  background: rgb(192, 78, 78); 
+}*/
+
+th { 
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}
+
+td, th { 
+  padding: 6px; 
+  border: 1px solid #ccc; 
+  text-align: left; 
+}
+</style>
