@@ -2,50 +2,49 @@
   <div>
     <h1 id="h1"></h1>
 
-    <div>
-      <table id="tableCart">
-        <thead>
-          <tr>
-            <th>Produit</th>
-            <th>Couleur</th>
-            <th>Prix unitaire</th>
-            <th>Qt</th>
-            <th>Total</th>
-            <th>x</th>
-          </tr>
-        </thead>
-        <tbody id="cartBody"></tbody>
-        <tfoot>
-          <tr>
-            <td id="totalSomme"></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+    <div id="cartAndCheckout">
+      <div>
+        <table id="tableCart">
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Couleur</th>
+              <th>Prix unitaire</th>
+              <th>Qt</th>
+              <th>Total</th>
+              <th>x</th>
+            </tr>
+          </thead>
+          <tbody id="cartBody"></tbody>
+          <tfoot>
+            <tr>
+              <td id="totalSomme"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
-    <UserInformationComponent/>
+      <UserInformationComponent />
+    </div>
   </div>
 </template>
 
 <script>
-import UserInformationComponent from '@/components/UserInformationComponent.vue'
+import UserInformationComponent from "@/components/UserInformationComponent.vue";
 
 let cartLocalStorage = JSON.parse(localStorage.getItem("cartItem"));
 
 export default {
   name: "CartComponent",
   components: {
-      UserInformationComponent
+    UserInformationComponent,
   },
 
   mounted() {
     if (!cartLocalStorage) {
-
       document.querySelector("h1").textContent = "Panier vide !";
-      document.getElementById("tableCart").style.display = 'none';
-
+      document.getElementById("cartAndCheckout").style.display = "none";
     } else {
-
       document.querySelector("h1").textContent = "Finaliser votre commande !";
 
       let totalSomme = 0;
@@ -63,9 +62,9 @@ export default {
         const cell4 = row.insertCell(3);
         const cell5 = row.insertCell(4);
         const cell6 = row.insertCell(5);
-        const cancelBtn = document.createElement('button');
-        cancelBtn.classList.add('cancelBtn');
-        cancelBtn.textContent = 'x';
+        const cancelBtn = document.createElement("button");
+        cancelBtn.classList.add("cancelBtn");
+        cancelBtn.textContent = "x";
         console.log(cancelBtn);
 
         cell1.textContent = cartItem.name;
@@ -79,41 +78,44 @@ export default {
 
         cancelBtn.addEventListener("click", (e) => {
           e.preventDefault();
-          console.log('cliqué');
+          console.log("cliqué");
 
           table.deleteRow(i);
           cartLocalStorage.splice(i, 1);
-          localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
+          localStorage.setItem("cartItem", JSON.stringify(cartLocalStorage));
           document.location.reload();
         });
       }
 
-      document.getElementById("totalSomme").textContent = `Total : ${totalSomme}`;
+      document.getElementById(
+        "totalSomme"
+      ).textContent = `Total : ${totalSomme}`;
     }
-  }
+  },
 };
 </script>
 
 <style scoped>
 table {
-    margin: auto;
-    width: 85%;
-    border-collapse: collapse;
+  margin: auto;
+  width: 85%;
+  border-collapse: collapse;
 }
 
 /*tr:nth-child(odd) {     NE S'PPLIQUE PAS DU TOUT AU TBODY TR
   background: rgb(192, 78, 78); 
 }*/
 
-th { 
-  background: #333; 
-  color: white; 
-  font-weight: bold; 
+th {
+  background: #333;
+  color: white;
+  font-weight: bold;
 }
 
-td, th { 
-  padding: 6px; 
-  border: 1px solid #ccc; 
-  text-align: left; 
+td,
+th {
+  padding: 6px;
+  border: 1px solid #ccc;
+  text-align: left;
 }
 </style>
