@@ -1,5 +1,7 @@
 <template>
     <div>
+
+        <h2>Finalisez votre commande</h2>
         <form action="">
             <div class="form">
                <div class="adress">

@@ -2,8 +2,10 @@
   <div>
     <h1 id="h1"></h1>
 
+    <router-link to="/">Continuer mes achats</router-link>
+
     <div id="cartAndCheckout">
-      <div>
+      <div class="tableDiv">
         <table id="tableCart">
           <thead>
             <tr>
@@ -42,10 +44,12 @@ export default {
 
   mounted() {
     if (!cartLocalStorage) {
-      document.querySelector("h1").textContent = "Panier vide !";
+
+      document.querySelector("h1").textContent = "Votre panier est vide !";
       document.getElementById("cartAndCheckout").style.display = "none";
+
     } else {
-      document.querySelector("h1").textContent = "Finaliser votre commande !";
+      document.querySelector("h1").textContent = "Mon panier";
 
       let totalSomme = 0;
 
@@ -55,7 +59,8 @@ export default {
         let totalRow = (cartItem.quantity * cartItem.price) / 100;
 
         const table = document.getElementById("cartBody");
-        const row = table.insertRow(); //tr. (0) ajoute l'item en première ligne
+        const rowCount = table.rows.length;
+        const row = table.insertRow(rowCount); //tr. (0) ajoute l'item en première ligne
         const cell1 = row.insertCell(0); //td
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
@@ -65,7 +70,14 @@ export default {
         const cancelBtn = document.createElement("button");
         cancelBtn.classList.add("cancelBtn");
         cancelBtn.textContent = "x";
-        console.log(cancelBtn);
+
+        if (rowCount % 2 == 0) {
+          console.log('ok');
+          row.style.background = "red";
+        } else {
+          console.log('no');
+          row.style.background = "green";
+        }
 
         cell1.textContent = cartItem.name;
         cell2.textContent = cartItem.vanish;
@@ -96,6 +108,11 @@ export default {
 </script>
 
 <style scoped>
+
+.tableDiv {
+  margin: 40px 0 80px 0;
+}
+
 table {
   margin: auto;
   width: 85%;
@@ -104,18 +121,17 @@ table {
 
 /*tr:nth-child(odd) {     NE S'PPLIQUE PAS DU TOUT AU TBODY TR
   background: rgb(192, 78, 78); 
-}*/
+}
 
-th {
+/*th {
   background: #333;
   color: white;
   font-weight: bold;
-}
+}*/
 
-td,
-th {
+/*td, th {
   padding: 6px;
   border: 1px solid #ccc;
   text-align: left;
-}
+}*/
 </style>
