@@ -20,7 +20,7 @@
           <tbody id="cartBody"></tbody>
           <tfoot>
             <tr>
-              <td id="totalSomme"></td>
+              <td id="totalSomme" colspan="6"></td>
             </tr>
           </tfoot>
         </table>
@@ -71,12 +71,12 @@ export default {
         cancelBtn.classList.add("cancelBtn");
         cancelBtn.textContent = "x";
 
-        if (rowCount % 2 == 0) {
+        if (rowCount % 2 == 0) {  // vérifie si le nombre est pair
           console.log('ok');
-          row.style.background = "red";
-        } else {
+          row.style.background = "rgba(175, 125, 95, 0.31)";
+        } else {                  //sinon impair
           console.log('no');
-          row.style.background = "green";
+          row.style.background = "rgba(175, 125, 95, 0.959)";
         }
 
         cell1.textContent = cartItem.name;
@@ -101,7 +101,7 @@ export default {
 
       document.getElementById(
         "totalSomme"
-      ).textContent = `Total : ${totalSomme}`;
+      ).textContent = `Total : ${totalSomme} €`;
     }
   },
 };
@@ -119,19 +119,24 @@ table {
   border-collapse: collapse;
 }
 
-/*tr:nth-child(odd) {     NE S'PPLIQUE PAS DU TOUT AU TBODY TR
-  background: rgb(192, 78, 78); 
+tr {
+  background: rgb(48, 45, 45); 
 }
 
-/*th {
+th, #totalSomme {
   background: #333;
   color: white;
   font-weight: bold;
-}*/
-
-/*td, th {
   padding: 6px;
   border: 1px solid #ccc;
-  text-align: left;
-}*/
+}
+
+th {
+  text-align: center;
+}
+
+#totalSomme {
+  text-align: right;
+  padding-right: 90px;
+}
 </style>
