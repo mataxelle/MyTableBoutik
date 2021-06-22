@@ -7,37 +7,37 @@
                <div class="adress">
                    <h3>Addresse de livraison</h3>
                    <div class="name">
-                       <div>
+                       <div class="formField">
                            <label for="lastName"> Nom</label>
                            <input type="text" id="lastName" name="lastName" v-model="lastName" required>
-                           <small></small>
+                           <small class="errorLastName"></small>
                         </div>
-                        <div>
+                        <div class="formField">
                            <label for="firstName"> Prénom</label>
                            <input type="text" id="firstName" name="firstname" v-model="firstName" required>
-                           <small></small>
+                           <small class="errorFirstName"></small>
                         </div>
                    </div>
-                   <div class="emailInfo">
+                   <div class="emailInfo formField">
                        <label for="email"> Email</label>
                        <input type="email" id="email" name="email" v-model="email" required>
-                       <small></small>
+                       <small class="errorEmail"></small>
                    </div>
-                   <div class="adressInfo">
+                   <div class="adressInfo formField">
                        <label for="address"> Adresse</label>
                        <input type="text" id="address" name="address" v-model="address" required>
-                       <small></small>
+                       <small class="errorAddress"></small>
                    </div>
                    <div class="cityInfo">
-                       <div>
+                       <div class="formField">
                            <label for="city"> Ville</label>
                            <input type="text" id="city" name="city" v-model="city" required>
-                           <small></small>
+                           <small class="errorCity"></small>
                        </div>
-                       <div>
+                       <div class="formField">
                             <label for="zip">Code Postal</label>
                             <input type="text" id="zip" name="zip" v-model="zip" required>
-                            <small></small>
+                            <small class="errorZip"></small>
                        </div>
                    </div>
                </div>
@@ -52,28 +52,28 @@
                        <i class="fa fa-cc-discover" style="color:orange;"></i>
                     </div>
                     <div class="cardInfo">
-                        <div>
+                        <div class="formField">
                             <label for="cardName">Détenteur de la carte</label>
                             <input type="text" id="cardName" name="cardName" v-model="cardName" required>
-                            <small></small>
+                            <small class="errorCardName"></small>
                         </div>
-                        <div>
+                        <div class="formField">
                             <label for="cardNumber">Credit card number</label>
                             <input type="text" id="cardNumber" name="cardnumber" v-model="cardNumber" required>
-                            <small></small>
+                            <small class="errorCardNumber"></small>
                         </div>
                     </div>
 
                     <div class="cardInfoDate">
-                        <div>
+                        <div class="formField">
                             <label for="expirationDate">Date d'expiration</label>
                             <input type="text" id="expirationDate" name="expirationDate" v-model="expirationDate" required>
-                            <small></small>
+                            <small class="errorExpirationDate"></small>
                         </div>
-                        <div>
+                        <div class="formField">
                             <label for="cvv">CVV</label>
                             <input type="text" id="cvv" name="cvv" v-model="cvv" required>
-                            <small></small>
+                            <small class="errorCvv"></small>
                         </div>
                     </div>    
                 </div>
@@ -126,53 +126,53 @@ export default {
             //const caractValue = /[!$%§^&*@(),.?":#{}|<>]/;
             const emailValue = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]/;
 
-            if (wordValue.test(this.firstName) == false || this.firstName == "" || this.firstName.length > 20 || this.firstName.length < 2) {
-                alert('Vérifier votre prénom !');
+            if (wordValue.test(this.firstName) == false || !this.firstName || this.firstName.length > 20 || this.firstName.length < 2) {
+                document.querySelector('.errorFirstName').textContent = 'Votre prénom doit avoir entre 2 et 20 carctères et pas de chiffres !';
                 return false;
             }
 
-            if (wordValue.test(this.lastName) == false || this.lastName == "" || this.lastName.length > 20 || this.lastName.length < 2) {
-                alert('Vérifier votre nom !');
+            if (wordValue.test(this.lastName) == false || !this.lastName || this.lastName.length > 20 || this.lastName.length < 2) {
+                document.querySelector('.errorLastName').textContent = 'Votre nom doit avoir entre 2 et 20 carctères et pas de chiffres !';
                 return false;
             }
 
-            if (emailValue.test(this.email) == false || this.email == "") {
-                alert('Vérifier votre email !');
+            if (emailValue.test(this.email) == false || !this.email) {
+                document.querySelector('.errorEmail').textContent = 'Vérifiez votre email !';
                 return false;
             }
 
-            if (addressValue.test(this.address) == false || this.address == "") {
-                alert('Vérifier votre prénom !');
+            if (addressValue.test(this.address) == false || !this.address) {
+                document.querySelector('.errorAddress').textContent = 'Vérifier votre adresse !';
                 return false;
             }
 
-            if (wordValue.test(this.city) == false || this.city == "") {
-                alert('Vérifier votre ville !');
+            if (wordValue.test(this.city) == false || !this.city) {
+                document.querySelector('.errorCity').textContent = 'Vérifier votre adresse !';
                 return false;
             }
 
-            if (numberbValue.test(this.zip) == false || this.zip == "" || this.zip.length < 5 || this.zip.length > 5) {
-                alert('Vérifier votre code postal !');
+            if (numberbValue.test(this.zip) == false || !this.zip || this.zip.length < 5 || this.zip.length > 5) {
+                document.querySelector('.errorZip').textContent = 'Il doit y avoir 5 chiffres !';
                 return false;
             }
 
-            if (wordValue.test(this.cardName) == false || this.cardName == "" || this.cardName.length > 20 || this.cardName.length < 2) {
-                alert('Vérifier le nom du propriétaire de la carte !');
+            if (wordValue.test(this.cardName) !== wordValue.test(this.firstName) || !this.cardName || this.cardName.length > 20 || this.cardName.length < 2) {
+                document.querySelector('.errorCardName').textContent = 'L\'acheteur et le propriétaire de la carte doivent être identique !';
                 return false;
             }
 
-            if (numberbValue.test(this.cardNumber) == false || this.cardNumber == "" || this.cardNumber.length > 16 || this.cardNumber.length < 16) {
-                alert('Vérifier votre numéro de carte !');
+            if (numberbValue.test(this.cardNumber) == false || !this.cardNumber || this.cardNumber.length > 16 || this.cardNumber.length < 16) {
+                document.querySelector('.errorCardNumber').textContent = 'Notez les 16 chiffres de la carte !';
                 return false;
             }
 
-            if (numberbValue.test(this.expirationDate) == false || this.expirationDate == "") {
-                alert('Vérifier l\'expiration de votre carte !');
+            if (numberbValue.test(this.expirationDate) == false || !this.expirationDate) {
+                document.querySelector('.errorExpirationDate').textContent = 'Vérifier l\'expiration de votre carte !';
                 return false;
             }
 
-            if (numberbValue.test(this.cvv) == false || this.cvv == ""|| this.cvv.length > 3 || this.cvv.length < 3) {
-                alert('Vérifier le cvv de votre carte !');
+            if (numberbValue.test(this.cvv) == false || !this.cvv || this.cvv.length > 3 || this.cvv.length < 3) {
+                document.querySelector('.errorCvv').textContent = 'Vérifier le cvv au dos de votre carte !';
                 return false;
             }
         }
