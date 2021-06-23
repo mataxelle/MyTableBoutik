@@ -10,34 +10,34 @@
                        <div class="formField">
                            <label for="lastName"> Nom</label>
                            <input type="text" id="lastName" name="lastName" v-model="lastName" required>
-                           <small class="errorLastName"></small>
+                           <small v-if="errors.lastName" class="errorLastName">{{ errors.lastName }}</small>
                         </div>
                         <div class="formField">
                            <label for="firstName"> Prénom</label>
                            <input type="text" id="firstName" name="firstname" v-model="firstName" required>
-                           <small class="errorFirstName"></small>
+                           <small v-if="errors.firstName" class="errorFirstName">{{ errors.firstName }}</small>
                         </div>
                    </div>
                    <div class="emailInfo formField">
                        <label for="email"> Email</label>
                        <input type="email" id="email" name="email" v-model="email" required>
-                       <small class="errorEmail"></small>
+                       <small v-if="errors.email" class="errorEmail">{{ errors.email }}</small>
                    </div>
                    <div class="adressInfo formField">
                        <label for="address"> Adresse</label>
                        <input type="text" id="address" name="address" v-model="address" required>
-                       <small class="errorAddress"></small>
+                       <small v-if="errors.address" class="errorAddress">{{ errors.address }}</small>
                    </div>
                    <div class="cityInfo">
                        <div class="formField">
                            <label for="city"> Ville</label>
                            <input type="text" id="city" name="city" v-model="city" required>
-                           <small class="errorCity"></small>
+                           <small v-if="errors.city" class="errorCity">{{ errors.city }}</small>
                        </div>
                        <div class="formField">
                             <label for="zip">Code Postal</label>
                             <input type="text" id="zip" name="zip" v-model="zip" required>
-                            <small class="errorZip"></small>
+                            <small v-if="errors.zip" class="errorZip">{{ errors.zip }}</small>
                        </div>
                    </div>
                </div>
@@ -55,12 +55,12 @@
                         <div class="formField">
                             <label for="cardName">Détenteur de la carte</label>
                             <input type="text" id="cardName" name="cardName" v-model="cardName" required>
-                            <small class="errorCardName"></small>
+                            <small v-if="errors.cardName" class="errorCardName">{{ errors.cardName }}</small>
                         </div>
                         <div class="formField">
                             <label for="cardNumber">Credit card number</label>
-                            <input type="text" id="cardNumber" name="cardnumber" v-model="cardNumber" required>
-                            <small class="errorCardNumber"></small>
+                            <input type="text" id="cardNumber" name="cardNumber" v-model="cardNumber" required>
+                            <small v-if="errors.cardNumber" class="errorCardNumber">{{ errors.cardNumber }}</small>
                         </div>
                     </div>
 
@@ -68,12 +68,12 @@
                         <div class="formField">
                             <label for="expirationDate">Date d'expiration</label>
                             <input type="text" id="expirationDate" name="expirationDate" v-model="expirationDate" required>
-                            <small class="errorExpirationDate"></small>
+                            <small v-if="errors.expirationDate" class="errorExpirationDate">{{ errors.expirationDate }}</small>
                         </div>
                         <div class="formField">
                             <label for="cvv">CVV</label>
                             <input type="text" id="cvv" name="cvv" v-model="cvv" required>
-                            <small class="errorCvv"></small>
+                            <small v-if="errors.cvv" class="errorCvv">{{ errors.cvv }}</small>
                         </div>
                     </div>    
                 </div>
@@ -100,7 +100,8 @@ export default {
             cardName: "",
             cardNumber: "",
             expirationDate: "",
-            cvv: ""
+            cvv: "",
+            errors: {}
         }
     },
 
@@ -109,72 +110,111 @@ export default {
 
             e.preventDefault();
 
-            /*const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('email').value;
-            const address = document.getElementById('address').value;
-            const city = document.getElementById('city').value;
-            const zip = document.getElementById('zip').value;
-            const cardName = document.getElementById('cardName').value;
-            const cardNumber = document.getElementById('cardNumber').value;
-            const expirationDate = document.getElementById('expirationDate').value;
-            const cvv = document.getElementById('cvv').value;*/
+            //initialisation tableau erreurs
+            this.errors = {};
+
+            let cartLocalStorage = JSON.parse(localStorage.getItem("cartItem"));
+            let products = cartLocalStorage;
+            let contact;
 
             const wordValue = /[a-zA-Z-]/;
             const numberbValue = /[0-9]/
             const addressValue = /[a-zA-Z0-9\s]/;
             //const caractValue = /[!$%§^&*@(),.?":#{}|<>]/;
             const emailValue = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]/;
+            
 
-            if (wordValue.test(this.firstName) == false || !this.firstName || this.firstName.length > 20 || this.firstName.length < 2) {
-                document.querySelector('.errorFirstName').textContent = 'Votre prénom doit avoir entre 2 et 20 carctères et pas de chiffres !';
-                return false;
+            const checkFirstName = () => {
+                if (wordValue.test(this.firstName) === false || !this.firstName || this.firstName.length > 20 || this.firstName.length < 2) {
+                    this.errors.firstName = 'Votre prénom doit avoir entre 2 et 20 carctères et pas de chiffres !';
+                }
             }
 
-            if (wordValue.test(this.lastName) == false || !this.lastName || this.lastName.length > 20 || this.lastName.length < 2) {
-                document.querySelector('.errorLastName').textContent = 'Votre nom doit avoir entre 2 et 20 carctères et pas de chiffres !';
-                return false;
+            const checkLastName = () => {
+                if (wordValue.test(this.lastName) === false || !this.lastName || this.lastName.length > 20 || this.lastName.length < 2) {
+                    this.errors.lastName = 'Votre nom doit avoir entre 2 et 20 carctères et pas de chiffres !';
+                }
             }
 
-            if (emailValue.test(this.email) == false || !this.email) {
-                document.querySelector('.errorEmail').textContent = 'Vérifiez votre email !';
-                return false;
+            const checkEmail = () => {
+                if (emailValue.test(this.email) === false || !this.email) {
+                    this.errors.email = 'Vérifiez votre email !';
+                }
             }
 
-            if (addressValue.test(this.address) == false || !this.address) {
-                document.querySelector('.errorAddress').textContent = 'Vérifier votre adresse !';
-                return false;
+            const checkAddress = () => {
+                if (addressValue.test(this.address) === false || !this.address) {
+                    this.errors.address = 'Vérifier votre adresse !';
+                }
             }
 
-            if (wordValue.test(this.city) == false || !this.city) {
-                document.querySelector('.errorCity').textContent = 'Vérifier votre adresse !';
-                return false;
+            const checkCity = () => {
+                if (wordValue.test(this.city) === false || !this.city) {
+                    this.errors.city = 'Vérifier votre adresse !';
+                }
             }
 
-            if (numberbValue.test(this.zip) == false || !this.zip || this.zip.length < 5 || this.zip.length > 5) {
-                document.querySelector('.errorZip').textContent = 'Il doit y avoir 5 chiffres !';
-                return false;
+            const checkZip = () => {
+                if (numberbValue.test(this.zip) === false || !this.zip || this.zip.length < 5 || this.zip.length > 5) {
+                    this.errors.zip = 'Il doit y avoir 5 chiffres !';
+                }
             }
 
-            if (wordValue.test(this.cardName) !== wordValue.test(this.firstName) || !this.cardName || this.cardName.length > 20 || this.cardName.length < 2) {
-                document.querySelector('.errorCardName').textContent = 'L\'acheteur et le propriétaire de la carte doivent être identique !';
-                return false;
+            const checkCardName = () => {
+                if (this.cardName !== this.firstName || !this.cardName || this.cardName.length > 20 || this.cardName.length < 2) {
+                    this.errors.cardName = 'L\'acheteur et le propriétaire de la carte doivent être identique !';
+                }
             }
 
-            if (numberbValue.test(this.cardNumber) == false || !this.cardNumber || this.cardNumber.length > 16 || this.cardNumber.length < 16) {
-                document.querySelector('.errorCardNumber').textContent = 'Notez les 16 chiffres de la carte !';
-                return false;
+            const checkCardNumber = () => {
+                if (numberbValue.test(this.cardNumber) === false || !this.cardNumber || this.cardNumber.length > 16 || this.cardNumber.length < 16) {
+                    this.errors.cardNumber = 'Notez les 16 chiffres de la carte !';
+                }
             }
 
-            if (numberbValue.test(this.expirationDate) == false || !this.expirationDate) {
-                document.querySelector('.errorExpirationDate').textContent = 'Vérifier l\'expiration de votre carte !';
-                return false;
+            const checkExpirationDate = () => {
+                if (numberbValue.test(this.expirationDate) === false || !this.expirationDate) {
+                    this.errors.expirationDate = 'Vérifier l\'expiration de votre carte !';
+                }
             }
 
-            if (numberbValue.test(this.cvv) == false || !this.cvv || this.cvv.length > 3 || this.cvv.length < 3) {
-                document.querySelector('.errorCvv').textContent = 'Vérifier le cvv au dos de votre carte !';
-                return false;
+            const checkCvv = () => {
+                if (numberbValue.test(this.cvv) === false || !this.cvv || this.cvv.length > 3 || this.cvv.length < 3) {
+                    this.errors.cvv = 'Vérifier le cvv au dos de votre carte !';
+                }
             }
+
+            let isFirstNameValid = checkFirstName(),
+                isLastNameValid = checkLastName(),
+                isEmailValid = checkEmail(),
+                isAddressValid = checkAddress(),
+                isCityValid = checkCity(),
+                isZipValid = checkZip(),
+                isCardNameValid = checkCardName(),
+                isCardNumberValid = checkCardNumber(),
+                isExpirationDateValid = checkExpirationDate(),
+                isCvvValid = checkCvv();
+
+            let isFormValid = isFirstNameValid && isLastNameValid &&
+             isEmailValid && isAddressValid && isCityValid && isZipValid &&
+             isCardNameValid && isCardNumberValid && isExpirationDateValid && isCvvValid ;
+
+            if (!isFormValid) {
+                contact = {
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    email: this.email,
+                    address: this.address,
+                    city: this.city,
+                    zip: this.zip
+                };
+            } else {
+                console.log('ERREUR PFFF !')
+            }
+
+            console.log(products);
+            
+            localStorage.setItem('contact', JSON.stringify(contact));
         }
     }
 }
