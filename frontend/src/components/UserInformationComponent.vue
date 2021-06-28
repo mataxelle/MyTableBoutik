@@ -86,6 +86,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: "UserInformationComponent",
 
@@ -215,6 +217,22 @@ export default {
             console.log(products);
             
             localStorage.setItem('contact', JSON.stringify(contact));
+
+            axios.post("http://localhost:3000/api/furniture/order", 
+                    {
+                        contact: this.contact,
+                        products: this.products
+                    }
+            )
+            .then((response) => {
+                console.log(response);
+                this.$router.replace({
+                    path: "/Order-Confirmation"
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
         }
     }
 }

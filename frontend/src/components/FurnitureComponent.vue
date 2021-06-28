@@ -60,18 +60,21 @@ export default {
                 if (this.selected) {
                     cartLocalStorage.push(choisedItem);
                     localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
+                    this.$router.replace({
+                       path: "/cart"
+                    });
                 } else {
                     alert('Choisissez un vernis s\' vous plaît !');
                 }
             };
 
-            if (cartLocalStorage) {
-                
+            if (!cartLocalStorage) {
+
+                cartLocalStorage = [];
                 itemToCartOk();
 
             } else {
 
-                cartLocalStorage = [];
                 itemToCartOk();
             }
         }
