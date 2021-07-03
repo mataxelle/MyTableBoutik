@@ -1,10 +1,11 @@
 <template>
   <div>
-    <h1 id="h1"></h1>
+    <h1 v-if="cartItems">Mon panier</h1>
+    <h1 v-else>Panier vide</h1>
 
     <router-link to="/">Continuer mes achats</router-link>
 
-    <div id="cartAndCheckout">
+    <div id="cartAndCheckout" v-if="cartItems.length > 0">
       <div class="tableDiv">
         <table id="tableCart">
           <thead>
@@ -17,33 +18,47 @@
               <th>x</th>
             </tr>
           </thead>
-          <tbody id="cartBody"></tbody>
+          <tbody id="cartBody">
+            <tr v-for="(cartItem, index) in cartItems" :key="index" :cartItem="cartItem">
+              <td>{{ cartItem.name }}</td>
+              <td>{{ cartItem.varnish }}</td>
+              <td>{{ cartItem.price / 100 + "€" }}</td>
+              <td>{{ cartItem.quantity }}</td>
+              <td>{{ cartItem.price / 100 * cartItem.quantity }}</td>
+              <td><button @click="removeToCart">X</button></td>
+            </tr>
+          </tbody>
           <tfoot>
             <tr>
-              <td id="totalSomme" colspan="6"></td>
+              <td id="totalSomme" colspan="6"> Total </td>
             </tr>
           </tfoot>
         </table>
       </div>
-
-      <UserInformationComponent />
     </div>
+
   </div>
 </template>
 
 <script>
-import UserInformationComponent from "@/components/UserInformationComponent.vue";
 
-let cartLocalStorage = JSON.parse(localStorage.getItem("cartItem"));
+const cartLocalStorage = JSON.parse(localStorage.getItem("cartItem"));
 
 export default {
   name: "CartComponent",
-  components: {
-    UserInformationComponent,
+  components: {},
+
+  data() {
+    return {
+      cartItems: {}
+    }
   },
 
   mounted() {
-    if (!cartLocalStorage) {
+
+    this.cartItems = cartLocalStorage;
+
+    /*if (!cartLocalStorage.length) {
 
       document.querySelector("h1").textContent = "Votre panier est vide !";
       document.getElementById("cartAndCheckout").style.display = "none";
@@ -55,6 +70,8 @@ export default {
 
       for (let i = 0; i < cartLocalStorage.length; i++) {
         const cartItem = cartLocalStorage[i];
+
+        this.cartItems = cartItem;
 
         let totalRow = (cartItem.quantity * cartItem.price) / 100;
 
@@ -72,15 +89,13 @@ export default {
         cancelBtn.textContent = "x";
 
         if (rowCount % 2 == 0) {  // vérifie si le nombre est pair
-          console.log('ok');
           row.style.background = "rgba(175, 125, 95, 0.31)";
         } else {                  //sinon impair
-          console.log('no');
           row.style.background = "rgba(175, 125, 95, 0.959)";
         }
 
         cell1.textContent = cartItem.name;
-        cell2.textContent = cartItem.vanish;
+        cell2.textContent = cartItem.varnish;
         cell3.textContent = cartItem.price / 100 + "€";
         cell4.textContent = cartItem.quantity;
         cell5.textContent = totalRow + "€";
@@ -102,8 +117,20 @@ export default {
       document.getElementById(
         "totalSomme"
       ).textContent = `Total : ${totalSomme} €`;
-    }
+    }*/
   },
+
+  methods: {
+    removeToCart(index) {
+
+      index.preventDefault();
+
+      document.getElementById("cartBody").deleteRow(index);
+      cartLocalStorage.splice(index, 1);
+      localStorage.setItem("cartItem", JSON.stringify(cartLocalStorage));
+      document.location.reload();
+    }
+  }
 };
 </script>
 
@@ -119,8 +146,12 @@ table {
   border-collapse: collapse;
 }
 
-tr {
+thead tr, tfoot tr {
   background: rgb(48, 45, 45); 
+}
+
+tbody tr:nth-child(odd) {
+  background-color: rgba(175, 125, 95, 0.31);
 }
 
 th, #totalSomme {

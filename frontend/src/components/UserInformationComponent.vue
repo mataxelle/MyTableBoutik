@@ -218,16 +218,22 @@ export default {
             
             localStorage.setItem('contact', JSON.stringify(contact));
 
+            // http://localhost:3000/api/furniture/order 400
+            // http://localhost:3000/api/furniture/" + "order" 400
+            // /order 404
+
             axios.post("http://localhost:3000/api/furniture/order", 
                     {
                         contact: this.contact,
                         products: this.products
+                    },{
+                        headers: {'Content-Type':'application/json;charset=UTF-8'}
                     }
             )
             .then((response) => {
                 console.log(response);
                 this.$router.replace({
-                    path: "/Order-Confirmation"
+                    path: "/order-Confirmation"
                 });
             })
             .catch((error) => {

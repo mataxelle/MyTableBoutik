@@ -18,8 +18,6 @@
 <script>
 import axios from 'axios'
 
-let cartLocalStorage = JSON.parse(localStorage.getItem('cartItem'));
-
 export default {
     name: "FurnitureComponent",
 
@@ -41,28 +39,27 @@ export default {
         .catch((e) => {
             console.log(e);
         });
+
+        /*if (!localStorage.getItem('cartItem')) {
+            localStorage.setItem('cartItem', JSON.stringify([]))}*/
     },
 
     methods: {
         sendItemToCart() {
-            console.log('clique ok');
+
+            let cartLocalStorage = JSON.parse(localStorage.getItem('cartItem'));
 
             const choisedItem = {
                 id: this.furniture._id,
                 name: this.furniture.name,
-                vanish: this.selected,
+                varnish: this.selected,
                 price: this.furniture.price,
                 quantity: 1
             };
-            console.log(this.selected);
 
             const itemToCartOk = () => {
                 if (this.selected) {
                     cartLocalStorage.push(choisedItem);
-                    localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
-                    this.$router.replace({
-                       path: "/cart"
-                    });
                 } else {
                     alert('Choisissez un vernis s\' vous plaît !');
                 }
@@ -77,6 +74,11 @@ export default {
 
                 itemToCartOk();
             }
+
+            localStorage.setItem('cartItem', JSON.stringify(cartLocalStorage));
+            this.$router.replace({
+                path: "/cart"
+            });
         }
     }
     
