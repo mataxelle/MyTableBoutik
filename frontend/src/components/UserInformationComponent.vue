@@ -40,42 +40,6 @@
                             <small v-if="errors.zip" class="errorZip">{{ errors.zip }}</small>
                        </div>
                    </div>
-               </div>
-
-               <div class="paiement">
-                   <h3>Mode de paiement</h3>
-                   <label for="fname">Carte acceptée</label>
-                   <div class="icon-container">
-                       <i class="fa fa-cc-visa" style="color:navy;"></i>
-                       <i class="fa fa-cc-amex" style="color:blue;"></i>
-                       <i class="fa fa-cc-mastercard" style="color:red;"></i>
-                       <i class="fa fa-cc-discover" style="color:orange;"></i>
-                    </div>
-                    <div class="cardInfo">
-                        <div class="formField">
-                            <label for="cardName">Détenteur de la carte</label>
-                            <input type="text" id="cardName" name="cardName" v-model="cardName" required>
-                            <small v-if="errors.cardName" class="errorCardName">{{ errors.cardName }}</small>
-                        </div>
-                        <div class="formField">
-                            <label for="cardNumber">Credit card number</label>
-                            <input type="text" id="cardNumber" name="cardNumber" v-model="cardNumber" required>
-                            <small v-if="errors.cardNumber" class="errorCardNumber">{{ errors.cardNumber }}</small>
-                        </div>
-                    </div>
-
-                    <div class="cardInfoDate">
-                        <div class="formField">
-                            <label for="expirationDate">Date d'expiration</label>
-                            <input type="text" id="expirationDate" name="expirationDate" v-model="expirationDate" required>
-                            <small v-if="errors.expirationDate" class="errorExpirationDate">{{ errors.expirationDate }}</small>
-                        </div>
-                        <div class="formField">
-                            <label for="cvv">CVV</label>
-                            <input type="text" id="cvv" name="cvv" v-model="cvv" required>
-                            <small v-if="errors.cvv" class="errorCvv">{{ errors.cvv }}</small>
-                        </div>
-                    </div>    
                 </div>
                 <div>
                     <input type="submit" value="Confimer ma commande" class="button">
@@ -99,10 +63,6 @@ export default {
             address: "",
             city: "",
             zip: "",
-            cardName: "",
-            cardNumber: "",
-            expirationDate: "",
-            cvv: "",
             errors: {}
         }
     },
@@ -116,13 +76,15 @@ export default {
             this.errors = {};
 
             let cartLocalStorage = JSON.parse(localStorage.getItem("cartItem"));
-            let products = cartLocalStorage;
+            let products = [];
+            for (const product of cartLocalStorage) {
+                products.push(product.id);
+            }
             let contact;
 
             const wordValue = /[a-zA-Z-]/;
             const numberbValue = /[0-9]/
             const addressValue = /[a-zA-Z0-9\s]/;
-            //const caractValue = /[!$%§^&*@(),.?":#{}|<>]/;
             const emailValue = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]/;
             
 
@@ -162,44 +124,15 @@ export default {
                 }
             }
 
-            const checkCardName = () => {
-                if (this.cardName !== this.firstName || !this.cardName || this.cardName.length > 20 || this.cardName.length < 2) {
-                    this.errors.cardName = 'L\'acheteur et le propriétaire de la carte doivent être identique !';
-                }
-            }
-
-            const checkCardNumber = () => {
-                if (numberbValue.test(this.cardNumber) === false || !this.cardNumber || this.cardNumber.length > 16 || this.cardNumber.length < 16) {
-                    this.errors.cardNumber = 'Notez les 16 chiffres de la carte !';
-                }
-            }
-
-            const checkExpirationDate = () => {
-                if (numberbValue.test(this.expirationDate) === false || !this.expirationDate) {
-                    this.errors.expirationDate = 'Vérifier l\'expiration de votre carte !';
-                }
-            }
-
-            const checkCvv = () => {
-                if (numberbValue.test(this.cvv) === false || !this.cvv || this.cvv.length > 3 || this.cvv.length < 3) {
-                    this.errors.cvv = 'Vérifier le cvv au dos de votre carte !';
-                }
-            }
-
             let isFirstNameValid = checkFirstName(),
                 isLastNameValid = checkLastName(),
                 isEmailValid = checkEmail(),
                 isAddressValid = checkAddress(),
                 isCityValid = checkCity(),
-                isZipValid = checkZip(),
-                isCardNameValid = checkCardName(),
-                isCardNumberValid = checkCardNumber(),
-                isExpirationDateValid = checkExpirationDate(),
-                isCvvValid = checkCvv();
+                isZipValid = checkZip();
 
             let isFormValid = isFirstNameValid && isLastNameValid &&
-             isEmailValid && isAddressValid && isCityValid && isZipValid &&
-             isCardNameValid && isCardNumberValid && isExpirationDateValid && isCvvValid ;
+             isEmailValid && isAddressValid && isCityValid && isZipValid;
 
             if (!isFormValid) {
                 contact = {
@@ -213,8 +146,6 @@ export default {
             } else {
                 console.log('ERREUR PFFF !')
             }
-
-            console.log(products);
             
             localStorage.setItem('contact', JSON.stringify(contact));
 
@@ -224,8 +155,8 @@ export default {
 
             axios.post("http://localhost:3000/api/furniture/order", 
                     {
-                        contact: this.contact,
-                        products: this.products
+                        contact: contact,
+                        products: products
                     },{
                         headers: {'Content-Type':'application/json;charset=UTF-8'}
                     }
@@ -233,7 +164,7 @@ export default {
             .then((response) => {
                 console.log(response);
                 this.$router.replace({
-                    path: "/order-Confirmation"
+                    path: "/order-confirmation"+"?orderId="+response.data.orderId
                 });
             })
             .catch((error) => {
