@@ -149,9 +149,9 @@ export default {
             
             localStorage.setItem('contact', JSON.stringify(contact));
 
-            // http://localhost:3000/api/furniture/order 400
-            // http://localhost:3000/api/furniture/" + "order" 400
-            // /order 404
+            // 
+            // +"?orderId=" + response.orderId  rien
+            // + response.orderId   undefined
 
             axios.post("http://localhost:3000/api/furniture/order", 
                     {
@@ -162,9 +162,9 @@ export default {
                     }
             )
             .then((response) => {
-                console.log(response);
+                const orderId = response.data.orderId;
                 this.$router.replace({
-                    path: "/order-confirmation"+"?orderId="+response.data.orderId
+                    name: 'Order-Confirmation', params: { orderId: orderId }
                 });
             })
             .catch((error) => {
